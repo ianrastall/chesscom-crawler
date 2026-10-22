@@ -48,7 +48,8 @@ Rust 1.99.1 (x86_64-pc-windows-msvc only); .NET SDK 10.0.113; Windows App SDK 2.
 - 29 Rust domain tests (months, settings, name matching, FIDE catalogue and both list layouts, store, gates, PGN rewriting, output, polite client with back-off and stop, two end-to-end crawls against canned API responses, one per rating source), 3 ABI tests including malformed input.
 - C# interop checks: three create/dispose rounds, settings validation errors with field names, export, 400 concurrent calls.
 - Live API, FIDE mode via the CLI: Hikaru, September 2026, 2700 floor, 3 s interval: 7 games, real names and FIDE ratings correct, no back-offs.
-- Live API, Chess.com mode from the GUI (results in the session notes of 22 October 2026).
+- Live API, Chess.com mode from the GUI: title lists and fair-play profile reads ran one at a time, 3 s apart. The run was stopped after about a minute, before its first account-month finished; Stop ended it promptly with nothing partial written. A complete Chess.com-mode month has so far been verified only against canned responses.
+- `build/build.ps1` passed end to end (fmt, clippy -D warnings, tests, interop checks, publish): a 240 MB self-contained folder and a 100 MB zip. The published CLI runs; the published GUI has not yet been launched from `dist`.
 - GUI: launch, Status and Settings views, Start and Stop through UI Automation, Windows accent applied.
 
 ## Known limitations and open items
