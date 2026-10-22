@@ -24,7 +24,8 @@ Recorded 22 October 2026 against the [Jupiter stack reference](../../_standards/
 
 Ian's direction (22 October 2026): FIDE identification is optional, and the default is the full Chess.com-rated database.
 
-- **Chess.com ratings (default):** the floor tests the ratings recorded with the game, before any request. Usernames and ratings stay as Chess.com wrote them; noise tags (`CurrentPosition`, `ECOUrl`, `Timezone`, `StartTime`, `EndDate`, `EndTime`) are removed. *Require identification* adds the FIDE gate and `WhiteFideId`/`BlackFideId` tags without changing names or ratings.
+- **Chess.com ratings (default):** the floor tests the ratings recorded with the game, before any request. Usernames and ratings stay as Chess.com wrote them; noise tags (`CurrentPosition`, `ECOUrl`, `Timezone`, `StartTime`, `EndDate`, `EndTime`) are removed. No identification takes place.
+- **One choice, two modes:** identification and FIDE names/ratings are the same option. An earlier draft also offered identification with Chess.com ratings; Ian removed it because it mixes usernames and Chess.com ratings with a FIDE gate (proto field 29 is reserved).
 - **FIDE ratings:** each game uses the newest FIDE standard list at or before its month (at most three months older by default). Only seeds rated at the floor on that list are crawled, highest first. PGN tags become FIDE name, Elo, title and FIDE ID; Chess.com usernames are kept as `WhiteAccount`/`BlackAccount`.
 - **Gate order:** all gates must pass, so order changes only the request count. Free gates come first (variant, time class, rated, checkmate, Chess.com-rating floor), then title-list membership and a Chess.com rating prefilter, then identification (one cached profile request), then fair play and FIDE ratings.
 - **Only standard ratings:** "standard" here means the FIDE standard list; rapid and blitz lists are ignored. Variants and non-standard starting positions are "non-standard games" for the filter.

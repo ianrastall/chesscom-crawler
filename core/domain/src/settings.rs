@@ -12,11 +12,9 @@ pub const MIN_REQUEST_INTERVAL: f64 = 1.0;
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
 pub struct Settings {
-    /// Which ratings the floors test and the collections carry.
+    /// Which names and ratings the collections carry and the floors test. FIDE ratings require
+    /// identifying both players against the FIDE lists.
     pub rating_source: RatingSource,
-    /// With Chess.com ratings: also require both players to be identified as FIDE players.
-    /// FIDE ratings always require identification.
-    pub require_identification: bool,
     /// Each floor writes its own collection; both players' ratings must meet it.
     pub floors: Vec<u16>,
     pub time_classes: TimeClasses,
@@ -132,7 +130,6 @@ impl Default for Settings {
     fn default() -> Self {
         Settings {
             rating_source: RatingSource::Chesscom,
-            require_identification: false,
             floors: vec![2400],
             time_classes: TimeClasses::default(),
             standard_only: true,
@@ -176,7 +173,7 @@ fn invalid(field: &'static str, message: impl Into<String>) -> SettingsError {
 impl Settings {
     /// Whether players must be identified against the FIDE lists.
     pub fn identifies(&self) -> bool {
-        self.rating_source == RatingSource::Fide || self.require_identification
+        self.rating_source == RatingSource::Fide
     }
 
     pub fn min_floor(&self) -> u16 {
@@ -281,7 +278,6 @@ impl Settings {
     /// `old`, so progress recorded under `old` remains valid.
     pub fn narrows(&self, old: &Settings) -> bool {
         self.rating_source == old.rating_source
-            && (self.require_identification || !old.require_identification)
             && self.time_classes.within(&old.time_classes)
             && (self.standard_only || !old.standard_only)
             && (self.rated_only || !old.rated_only)
@@ -414,8 +410,6 @@ mod tests {
         new.floors = vec![2300];
         assert!(!new.narrows(&old));
         let mut new = old.clone();
-        new.require_identification = true;
-        assert!(new.narrows(&old));
         new.rating_source = RatingSource::Fide;
         assert!(!new.narrows(&old));
     }

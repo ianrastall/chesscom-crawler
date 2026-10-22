@@ -2,9 +2,9 @@
 
 A Windows notification-area app that collects Chess.com games into monthly PGN collections through the Chess.com published-data API. Part of the Jupiter family.
 
-- **Two kinds of collection.** By default games keep their Chess.com usernames and ratings, and both players' ratings recorded with the game must meet the floor. Optionally, players are identified against the local FIDE rating lists: games then carry real names, FIDE standard ratings, titles and FIDE IDs, and both players' FIDE ratings must meet the floor. That collection is much smaller.
+- **Two kinds of collection.** By default games keep their Chess.com usernames and ratings, and both players' ratings recorded with the game must meet the floor. Alternatively, players are identified against the local FIDE rating lists: games then carry real names, FIDE standard ratings, titles and FIDE IDs, and both players' FIDE ratings must meet the floor. That collection is much smaller.
 - **Several floors at once.** Floors such as 2400 and 2700 each write their own collection from one crawl.
-- **Filters.** Time controls (bullet off by default), standard chess only, rated only, checkmate only, accounts closed for fair-play violations. With identification, accounts without a matching real name, including bots, are excluded.
+- **Filters.** Time controls (bullet off by default), standard chess only, rated only, checkmate only, accounts closed for fair-play violations. With FIDE ratings, accounts without a matching real name, including bots, are excluded.
 - **Months.** By default the crawl starts with the previous month and works backwards, then collects each new month once it completes. A start month, direction, stop month or a list of specific months and ranges can be chosen instead.
 - **Polite.** One request at a time, 3 seconds apart by default (never less than 1). Rate-limit and server errors pause from one minute to 30 minutes, honouring `Retry-After`. Profiles, title lists and archive lists are cached; finished months are never requested again. Only one crawler can run per data folder.
 

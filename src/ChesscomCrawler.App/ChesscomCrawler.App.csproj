@@ -15,7 +15,8 @@
     <WindowsPackageType>None</WindowsPackageType>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <SelfContained>true</SelfContained>
-    <EnableMsixTooling>false</EnableMsixTooling>
+    <!-- Required even unpackaged: it adds the app .pri and compiled XAML (.xbf) to publish output. -->
+    <EnableMsixTooling>true</EnableMsixTooling>
     <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PublishReadyToRun>false</PublishReadyToRun>

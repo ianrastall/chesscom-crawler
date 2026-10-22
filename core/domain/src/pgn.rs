@@ -120,9 +120,8 @@ pub fn strip_clocks(movetext: &str) -> String {
 /// Tags Chess.com adds that a game database does not need.
 const NOISE: [&str; 6] = ["CurrentPosition", "ECOUrl", "Timezone", "StartTime", "EndDate", "EndTime"];
 
-/// The Chess.com-rating collection form: original players and ratings, without noise tags, with
-/// FIDE IDs added when both players were identified.
-pub fn tidy(pgn: &str, fide_ids: Option<(i64, i64)>) -> String {
+/// The Chess.com-rating collection form: original players and ratings, without noise tags.
+pub fn tidy(pgn: &str) -> String {
     let (tags, movetext) = split(pgn);
     let mut out = String::with_capacity(pgn.len() + 64);
     for (name, value) in &tags {
@@ -130,10 +129,6 @@ pub fn tidy(pgn: &str, fide_ids: Option<(i64, i64)>) -> String {
             continue;
         }
         tag(&mut out, name, value);
-        if let (Some((white, black)), "BlackElo") = (fide_ids, name.as_str()) {
-            tag(&mut out, "WhiteFideId", &white.to_string());
-            tag(&mut out, "BlackFideId", &black.to_string());
-        }
     }
     out.push('\n');
     out.push_str(&movetext);
@@ -232,14 +227,12 @@ mod tests {
 
     #[test]
     fn tidies_chesscom_form() {
-        let out = tidy(SAMPLE, None);
+        let out = tidy(SAMPLE);
         assert!(
             out.contains("[White \"michobr\"]\n[Black \"Hikaru\"]")
                 && out.contains("[BlackElo \"3370\"]\n[TimeControl")
         );
         assert!(!out.contains("CurrentPosition") && !out.contains("Timezone") && !out.contains("FideId"));
-        let out = tidy(SAMPLE, Some((1, 2016192)));
-        assert!(out.contains("[BlackElo \"3370\"]\n[WhiteFideId \"1\"]\n[BlackFideId \"2016192\"]\n"));
     }
 
     #[test]

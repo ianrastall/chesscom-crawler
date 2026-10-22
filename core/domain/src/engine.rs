@@ -231,7 +231,6 @@ impl Crawler {
         let s = &self.settings;
         let shape = serde_json::json!({
             "rating_source": s.rating_source,
-            "require_identification": s.require_identification,
             "floors": s.floors,
             "time_classes": s.time_classes,
             "standard_only": s.standard_only,
@@ -717,7 +716,7 @@ impl Crawler {
                 &player_tags(black, black_elo, &game.black.username),
             )
         } else {
-            pgn::tidy(&game.pgn, self.settings.identifies().then_some(ids))
+            pgn::tidy(&game.pgn)
         };
         Ok(Ok(AcceptedGame {
             white_fide: ids.0,

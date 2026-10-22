@@ -26,10 +26,8 @@
                     <x:String>Chess.com usernames and Chess.com ratings</x:String>
                     <x:String>FIDE real names and FIDE standard ratings</x:String>
                 </RadioButtons>
-                <CheckBox Content="Require both players to be identified as FIDE players"
-                          IsChecked="{x:Bind ViewModel.RequireIdentification, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.IsChesscom, Mode=OneWay}" />
                 <TextBlock Style="{StaticResource ExplanationStyle}" Margin="0,-6,0,0"
-                           Text="Identification matches each account's profile name and title to one player on the newest FIDE list, and costs one profile request per account. FIDE ratings always require it, which makes a much smaller collection with real names. Accounts without a matching real name, including bot accounts, are then excluded." />
+                           Text="FIDE names and ratings require identifying both players: each account's profile name and title are matched to one player on the newest FIDE list, at one profile request per account. Games whose players cannot be identified, including bot accounts, are left out, so this collection is much smaller." />
                 <TextBox Header="Rating floors" Text="{x:Bind ViewModel.Floors, Mode=TwoWay}" Width="320" HorizontalAlignment="Left" />
                 <TextBlock Style="{StaticResource ExplanationStyle}" Margin="0,-6,0,0"
                            Text="Both players' ratings must meet a floor: the Chess.com ratings recorded with the game, or FIDE standard ratings from the month's list. Each floor writes its own collection, for example 2400, 2700." />
@@ -87,13 +85,13 @@
                     </ItemsRepeater.ItemTemplate>
                 </ItemsRepeater>
                 <TextBlock Style="{StaticResource ExplanationStyle}"
-                           Text="With identification, each seed account's profile is requested once and refreshed every few months, so the first run takes several hours. Without it, discovered opponents cost no extra requests." />
+                           Text="With FIDE ratings, each seed account's profile is requested once and refreshed every few months, so the first run takes several hours. With Chess.com ratings, discovered opponents cost no extra requests." />
                 <TextBox Header="Additional accounts" PlaceholderText="Chess.com usernames, separated by commas" Text="{x:Bind ViewModel.ExtraAccounts, Mode=TwoWay}" />
                 <CheckBox Content="Add opponents who meet the floor to the crawl" IsChecked="{x:Bind ViewModel.DiscoverOpponents, Mode=TwoWay}" />
                 <CheckBox Content="Identify accounts that are not on any title list" IsChecked="{x:Bind ViewModel.IncludeUntitled, Mode=TwoWay}"
-                          IsEnabled="{x:Bind ViewModel.Identifies, Mode=OneWay}" />
+                          IsEnabled="{x:Bind ViewModel.IsFide, Mode=OneWay}" />
                 <TextBlock Style="{StaticResource ExplanationStyle}"
-                           Text="Untitled accounts cost one profile request each and can only match FIDE players without a title. A titled account must match a FIDE player holding the same title." />
+                           Text="With FIDE ratings: untitled accounts cost one profile request each and can only match FIDE players without a title. A titled account must match a FIDE player holding the same title." />
                 <NumberBox Header="Skip unknown opponents rated this far below the floor on Chess.com" Width="420" HorizontalAlignment="Left"
                            Minimum="0" Maximum="3000" SmallChange="50" LargeChange="100" SpinButtonPlacementMode="Inline"
                            Value="{x:Bind ViewModel.PrefilterMargin, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.IsFide, Mode=OneWay}" />

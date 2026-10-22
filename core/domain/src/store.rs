@@ -134,7 +134,6 @@ pub struct ExportGame {
     pub rated: bool,
     pub standard: bool,
     pub checkmate: bool,
-    pub identified: bool,
     pub white_elo: i32,
     pub black_elo: i32,
     pub pgn: String,
@@ -446,7 +445,7 @@ impl Store {
 
     pub fn games_for_month(&self, month: Month, source: &str) -> Result<Vec<ExportGame>> {
         let mut stmt = self.conn.prepare(
-            "SELECT time_class, rated, standard, checkmate, white_fide > 0 AND black_fide > 0, white_elo, black_elo, pgn
+            "SELECT time_class, rated, standard, checkmate, white_elo, black_elo, pgn
              FROM games WHERE month = ?1 AND source = ?2 ORDER BY end_time, key",
         )?;
         let rows = stmt
@@ -456,10 +455,9 @@ impl Store {
                     rated: r.get(1)?,
                     standard: r.get(2)?,
                     checkmate: r.get(3)?,
-                    identified: r.get(4)?,
-                    white_elo: r.get(5)?,
-                    black_elo: r.get(6)?,
-                    pgn: r.get(7)?,
+                    white_elo: r.get(4)?,
+                    black_elo: r.get(5)?,
+                    pgn: r.get(6)?,
                 })
             })?
             .collect::<rusqlite::Result<Vec<_>>>()?;
@@ -546,7 +544,6 @@ mod tests {
         );
         assert!(!s.game_seen("u1", "chesscom").unwrap());
         assert_eq!(s.games_for_month(m, "fide").unwrap().len(), 1);
-        assert!(s.games_for_month(m, "fide").unwrap()[0].identified);
         assert!(s.games_for_month(m, "chesscom").unwrap().is_empty());
         assert_eq!(s.rejection_counts(m).unwrap(), vec![("time_class".to_string(), 1)]);
         s.reset_progress().unwrap();

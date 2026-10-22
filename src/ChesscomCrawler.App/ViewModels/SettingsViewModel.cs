@@ -42,17 +42,11 @@ public sealed partial class SettingsViewModel(CoreHost host) : ObservableObject
 
     [ObservableProperty] public partial bool IsLoaded { get; set; }
 
-    [ObservableProperty, NotifyPropertyChangedFor(nameof(IsFide), nameof(IsChesscom), nameof(Identifies))]
+    /// <summary>0: Chess.com usernames and ratings; 1: FIDE real names and standard ratings.</summary>
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(IsFide))]
     public partial int RatingSourceIndex { get; set; }
 
-    [ObservableProperty, NotifyPropertyChangedFor(nameof(Identifies))]
-    public partial bool RequireIdentification { get; set; }
-
     public bool IsFide => RatingSourceIndex == 1;
-    public bool IsChesscom => RatingSourceIndex == 0;
-
-    /// <summary>Whether players are identified against the FIDE lists under the edited settings.</summary>
-    public bool Identifies => IsFide || RequireIdentification;
     [ObservableProperty] public partial string Floors { get; set; } = "";
     [ObservableProperty] public partial bool Bullet { get; set; }
     [ObservableProperty] public partial bool Blitz { get; set; }
@@ -100,13 +94,12 @@ public sealed partial class SettingsViewModel(CoreHost host) : ObservableObject
     public string SavedOutputFolder => _saved.OutputFolder;
 
     /// <summary>Whether the saved settings identify players, for the status page.</summary>
-    public bool SavedIdentifies => _saved.RatingSource == RatingSource.Fide || _saved.RequireIdentification;
+    public bool SavedIdentifies => _saved.RatingSource == RatingSource.Fide;
 
     public void Load(Settings s)
     {
         _saved = s;
         RatingSourceIndex = s.RatingSource == RatingSource.Fide ? 1 : 0;
-        RequireIdentification = s.RequireIdentification;
         Floors = string.Join(", ", s.Floors);
         Bullet = s.Bullet;
         Blitz = s.Blitz;
@@ -159,7 +152,6 @@ public sealed partial class SettingsViewModel(CoreHost host) : ObservableObject
         var s = new Settings
         {
             RatingSource = RatingSourceIndex == 1 ? RatingSource.Fide : RatingSource.Chesscom,
-            RequireIdentification = RequireIdentification,
             Bullet = Bullet,
             Blitz = Blitz,
             Rapid = Rapid,

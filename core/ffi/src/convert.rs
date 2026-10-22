@@ -17,7 +17,6 @@ pub fn settings_to_message(s: &Settings) -> messages::Settings {
             RatingSource::Chesscom => messages::RatingSource::Chesscom,
             RatingSource::Fide => messages::RatingSource::Fide,
         } as i32,
-        require_identification: s.require_identification,
         floors: s.floors.iter().map(|&f| u32::from(f)).collect(),
         bullet: s.time_classes.bullet,
         blitz: s.time_classes.blitz,
@@ -64,7 +63,6 @@ pub fn settings_from_message(m: &messages::Settings) -> Result<Settings, Setting
             messages::RatingSource::Chesscom => RatingSource::Chesscom,
             messages::RatingSource::Fide => RatingSource::Fide,
         },
-        require_identification: m.require_identification,
         floors: m.floors.iter().map(|&f| narrow(f, "floors")).collect::<Result<_, _>>()?,
         time_classes: TimeClasses { bullet: m.bullet, blitz: m.blitz, rapid: m.rapid, daily: m.daily },
         standard_only: m.standard_only,
@@ -155,7 +153,6 @@ mod tests {
         s.time_classes.bullet = true;
         s.extra_accounts = vec!["hikaru".into()];
         s.rating_source = RatingSource::Fide;
-        s.require_identification = true;
         assert_eq!(settings_from_message(&settings_to_message(&s)).unwrap(), s);
         let mut m = settings_to_message(&s);
         m.floors = vec![70_000];

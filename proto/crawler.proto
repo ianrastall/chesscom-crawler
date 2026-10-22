@@ -112,9 +112,10 @@ message Settings {
   bool remove_clock_comments = 25;
   bool start_on_launch = 26;
   repeated string extra_accounts = 27;
+  // FIDE ratings require identifying both players against the FIDE lists.
   RatingSource rating_source = 28;
-  // With Chess.com ratings, also require both players to be identified as FIDE players.
-  bool require_identification = 29;
+  reserved 29;
+  reserved "require_identification";
 }
 
 enum RunState {

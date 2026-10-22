@@ -53,11 +53,7 @@ pub fn export_month(store: &Store, settings: &Settings, month: Month) -> Result<
         for g in &games {
             let facts =
                 GameFacts { time_class: &g.time_class, rated: g.rated, standard: g.standard, checkmate: g.checkmate };
-            if facts.check(settings).is_err()
-                || (settings.require_identification && !g.identified)
-                || g.white_elo < i32::from(floor)
-                || g.black_elo < i32::from(floor)
-            {
+            if facts.check(settings).is_err() || g.white_elo < i32::from(floor) || g.black_elo < i32::from(floor) {
                 continue;
             }
             if count > 0 {
