@@ -1,0 +1,18 @@
+[package]
+name = "chesscom_crawler_ffi"
+description = "C ABI facade over the Chess.com crawler core for the WinUI shell."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+chesscom_crawler_core.workspace = true
+prost.workspace = true
+
+[build-dependencies]
+prost-build.workspace = true
+protox.workspace = true

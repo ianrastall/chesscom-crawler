@@ -1,0 +1,7 @@
+/target/
+bin/
+obj/
+/dist/
+*.user
+.vs/
+__pycache__/

@@ -1,0 +1,165 @@
+// Messages exchanged over the crawler's C ABI (core/ffi). Schema evolution follows protobuf
+// rules: never reuse a field number; reserve removed fields and names. Unknown enum values are
+// treated as the zero value. Every Request carries a request_id that its Response echoes.
+
+syntax = "proto3";
+
+package jupiter.chesscom_crawler.v1;
+
+option csharp_namespace = "Jupiter.ChesscomCrawler.Messages";
+
+message CreateConfig {
+  string data_dir = 1;
+  string default_output_dir = 2;
+}
+
+message Request {
+  uint64 request_id = 1;
+  oneof command {
+    GetStatus get_status = 10;
+    GetSettings get_settings = 11;
+    UpdateSettings update_settings = 12;
+    StartCrawl start_crawl = 13;
+    StopCrawl stop_crawl = 14;
+    ExportCollections export_collections = 15;
+  }
+}
+
+message GetStatus {}
+message GetSettings {}
+message UpdateSettings {
+  Settings settings = 1;
+}
+message StartCrawl {}
+message StopCrawl {}
+// Rewrites every collection file from collected games under the saved settings.
+message ExportCollections {}
+
+message Response {
+  uint64 request_id = 1;
+  oneof result {
+    Status status = 10;
+    Settings settings = 11;
+    Done done = 12;
+    Error error = 13;
+  }
+}
+
+message Done {
+  string message = 1;
+}
+
+enum ErrorKind {
+  ERROR_KIND_UNSPECIFIED = 0;
+  ERROR_KIND_INVALID_SETTINGS = 1;
+  ERROR_KIND_IO = 2;
+  ERROR_KIND_STATE = 3;
+  ERROR_KIND_UNKNOWN_COMMAND = 4;
+}
+
+message Error {
+  ErrorKind kind = 1;
+  string message = 2;
+  // For ERROR_KIND_INVALID_SETTINGS: the settings field at fault.
+  string field = 3;
+}
+
+enum RatingSource {
+  // Chess.com usernames and the ratings recorded with each game.
+  RATING_SOURCE_CHESSCOM = 0;
+  // FIDE names and standard ratings from the month's rating list.
+  RATING_SOURCE_FIDE = 1;
+}
+
+enum MonthMode {
+  MONTH_MODE_CONTINUOUS = 0;
+  MONTH_MODE_SPECIFIC = 1;
+}
+
+enum Direction {
+  DIRECTION_BACKWARD = 0;
+  DIRECTION_FORWARD = 1;
+}
+
+message Settings {
+  repeated uint32 floors = 1;
+  bool bullet = 2;
+  bool blitz = 3;
+  bool rapid = 4;
+  bool daily = 5;
+  bool standard_only = 6;
+  bool rated_only = 7;
+  bool checkmate_only = 8;
+  bool exclude_fair_play_closures = 9;
+  bool include_untitled_accounts = 10;
+  MonthMode month_mode = 11;
+  // YYYY-MM; empty means the previous month.
+  string start_month = 12;
+  Direction direction = 13;
+  // YYYY-MM; empty means no bound.
+  string stop_month = 14;
+  // Comma-separated months and YYYY-MM..YYYY-MM ranges.
+  string specific_months = 15;
+  bool follow_new_months = 16;
+  repeated string seed_titles = 17;
+  bool discover_opponents = 18;
+  repeated string fide_folders = 19;
+  uint32 max_fide_list_age_months = 20;
+  double request_interval_seconds = 21;
+  string contact = 22;
+  uint32 prefilter_margin = 23;
+  string output_folder = 24;
+  bool remove_clock_comments = 25;
+  bool start_on_launch = 26;
+  repeated string extra_accounts = 27;
+  RatingSource rating_source = 28;
+  // With Chess.com ratings, also require both players to be identified as FIDE players.
+  bool require_identification = 29;
+}
+
+enum RunState {
+  RUN_STATE_IDLE = 0;
+  RUN_STATE_RUNNING = 1;
+  RUN_STATE_WAITING = 2;
+  RUN_STATE_STOPPING = 3;
+  RUN_STATE_COMPLETED = 4;
+  RUN_STATE_FAILED = 5;
+}
+
+message Status {
+  RunState state = 1;
+  string phase = 2;
+  // YYYY-MM, or empty.
+  string month = 3;
+  uint32 month_players_done = 4;
+  uint32 month_players_total = 5;
+  uint32 month_games = 6;
+  uint64 total_games = 7;
+  uint32 months_done = 8;
+  uint32 months_total = 9;
+  uint32 known_players = 10;
+  uint32 resolved_players = 11;
+  uint64 requests = 12;
+  int64 last_request_unix = 13;
+  int64 waiting_until_unix = 14;
+  string last_error = 15;
+  string fide_first = 16;
+  string fide_last = 17;
+  string fide_index_list = 18;
+}
+
+enum EventLevel {
+  EVENT_LEVEL_INFO = 0;
+  EVENT_LEVEL_WARNING = 1;
+  EVENT_LEVEL_ERROR = 2;
+}
+
+message Event {
+  int64 unix_ms = 1;
+  EventLevel level = 2;
+  string message = 3;
+}
+
+message EventBatch {
+  repeated Event events = 1;
+}

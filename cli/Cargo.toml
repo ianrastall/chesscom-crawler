@@ -1,0 +1,16 @@
+[package]
+name = "chesscom-crawler"
+description = "Command-line shell for the Chess.com crawler core."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "chesscom-crawler"
+path = "src/main.rs"
+
+[dependencies]
+chesscom_crawler_core.workspace = true
+clap.workspace = true
+serde_json.workspace = true

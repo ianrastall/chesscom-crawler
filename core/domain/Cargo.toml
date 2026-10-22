@@ -1,0 +1,17 @@
+[package]
+name = "chesscom_crawler_core"
+description = "Domain core for the Chess.com crawler: scheduling, gates, FIDE resolution and persistence."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+rusqlite.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+unicode-normalization.workspace = true
+ureq.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
