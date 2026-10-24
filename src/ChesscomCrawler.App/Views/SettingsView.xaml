@@ -3,7 +3,8 @@
     x:Class="Jupiter.ChesscomCrawler.App.Views.SettingsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:vm="using:Jupiter.ChesscomCrawler.App.ViewModels">
+    xmlns:vm="using:Jupiter.ChesscomCrawler.App.ViewModels"
+    xmlns:controls="using:Jupiter.ChesscomCrawler.App.Controls">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -92,9 +93,9 @@
                           IsEnabled="{x:Bind ViewModel.IsFide, Mode=OneWay}" />
                 <TextBlock Style="{StaticResource ExplanationStyle}"
                            Text="With FIDE ratings: untitled accounts cost one profile request each and can only match FIDE players without a title. A titled account must match a FIDE player holding the same title." />
-                <NumberBox Header="Skip unknown opponents rated this far below the floor on Chess.com" Width="420" HorizontalAlignment="Left"
-                           Minimum="0" Maximum="3000" SmallChange="50" LargeChange="100" SpinButtonPlacementMode="Inline"
-                           Value="{x:Bind ViewModel.PrefilterMargin, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.IsFide, Mode=OneWay}" />
+                <controls:NumericTextBox Header="Skip unknown opponents rated this far below the floor on Chess.com (0–3000 points)" Width="480" HorizontalAlignment="Left"
+                                         Minimum="0" Maximum="3000"
+                                         Value="{x:Bind ViewModel.PrefilterMargin, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.IsFide, Mode=OneWay}" />
                 <TextBlock Style="{StaticResource ExplanationStyle}" Margin="0,-6,0,0"
                            Text="With FIDE ratings: saves profile requests for opponents who cannot plausibly meet the floor. 0 turns this off." />
 
@@ -103,16 +104,16 @@
                          Text="{x:Bind ViewModel.FideFolders, Mode=TwoWay}" />
                 <TextBlock Style="{StaticResource ExplanationStyle}" Margin="0,-6,0,0"
                            Text="Used only for identification. Yearly (fide-YYYY.sqlite) and per-list (fide-standard-YYYY-MM.sqlite) databases are both read. Each game uses the newest standard list published in or before its month." />
-                <NumberBox Header="Oldest usable list, in months before the game" Width="320" HorizontalAlignment="Left"
-                           Minimum="0" Maximum="24" SmallChange="1" SpinButtonPlacementMode="Inline"
-                           Value="{x:Bind ViewModel.MaxFideListAge, Mode=TwoWay}" />
+                <controls:NumericTextBox Header="Oldest usable list, in months before the game (0–24)" Width="360" HorizontalAlignment="Left"
+                                         Minimum="0" Maximum="24"
+                                         Value="{x:Bind ViewModel.MaxFideListAge, Mode=TwoWay}" />
                 <TextBlock Style="{StaticResource ExplanationStyle}" Margin="0,-6,0,0"
                            Text="Months without a recent enough list are skipped until one is added." />
 
                 <TextBlock Style="{StaticResource SectionHeadingStyle}" Text="Server usage" />
-                <NumberBox Header="Seconds between requests" Width="240" HorizontalAlignment="Left"
-                           Minimum="1" Maximum="3600" SmallChange="0.5" LargeChange="1" SpinButtonPlacementMode="Inline"
-                           Value="{x:Bind ViewModel.RequestInterval, Mode=TwoWay}" />
+                <controls:NumericTextBox Header="Seconds between requests (1–3600)" Width="240" HorizontalAlignment="Left"
+                                         Minimum="1" Maximum="3600" DecimalPlaces="1"
+                                         Value="{x:Bind ViewModel.RequestInterval, Mode=TwoWay}" />
                 <TextBlock Style="{StaticResource ExplanationStyle}" Margin="0,-6,0,0"
                            Text="Requests are always made one at a time. After a rate-limit or server error the crawler waits from one minute up to 30 minutes, honouring Retry-After." />
                 <TextBox Header="Contact for Chess.com (optional)" PlaceholderText="Email address or website" Text="{x:Bind ViewModel.Contact, Mode=TwoWay}" />
